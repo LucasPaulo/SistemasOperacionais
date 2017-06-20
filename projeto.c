@@ -17,7 +17,7 @@ int vermelho(void * argument){
 
 
 void* caixaOcupado(void* args){
-while(sema!=0){
+while(sema!=1){
 	printf("Caixa atendendo");
 	verde(&sema);
 	
@@ -25,7 +25,7 @@ while(sema!=0){
 }
 	
 void* caixaLivre(void* args){
-while (sema!=1){
+while (sema!=0){
 	printf("caixa vazio \n");
 	vermelho(&sema);
 }
