@@ -5,7 +5,7 @@
 
 #define N_CLIENTES 10	
 	
-int sema = 0;
+int sema = 1;
 	
 int verde(void* argument){
 	sema=1;
