@@ -18,8 +18,7 @@ int vermelho(void * argument){
 
 void* caixaOcupado(void* args){
 while(sema!=0){
-	int ct = *(int*)args;
-	printf("Caixa atendendo",ct);
+	printf("Caixa atendendo");
 	vermelho(&sema);
 	
 }
@@ -27,8 +26,7 @@ while(sema!=0){
 	
 void* caixaLivre(void* args){
 while (sema!=1){
-	int ct = *(int*)args;
-	printf("caixa vazio \n",ct);
+	printf("caixa vazio \n");
 	verde(&sema);
 }
 }
@@ -52,5 +50,5 @@ for(i=0; i < N_CLIENTES;i++){
 for(i=0;i < N_CLIENTES;i++){
 	pthread_join(threadClientes[i],NULL);
 }
-	return 0;
+
 }
