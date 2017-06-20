@@ -1,70 +1,56 @@
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include <unistd.h>
 
-#define N_FILA 5 
-int x =  1;
-
-void verde(){
-	x = x+1;
-	return x;
+#define N_CLIENTES 10	
+	
+int sema = 0;
+	
+int verde(void* argument){
+	sema=1;
 }
 
-void vermelho(){
-	x = x-1;
-	return x;
+int vermelho(void * argument){
+	sema=0;
+	}
+
+
+void* caixaOcupado(void* args){
+while(sema!=0){
+	int ct = *(int*)args;
+	printf("Caixa atendendo",ct);
+	vermelho(&sema);
+	
+}
+}
+	
+void* caixaLivre(void* args){
+while (sema!=1){
+	int ct = *(int*)args;
+	printf("caixa vazio \n",ct);
+	verde(&sema);
+}
 }
 
-void verificaCaixa(void * x){
-	if(x == 0){
-		printf("Caixa ocupado!");
-		atendendo();
-	} else if(x == 1){
-		printf("Caixa Livre!");
-		fila();
-	}
-	return x;
-}
-void * fila(void * x){
-	while(1){
-		if(N_FILA > 5){
-			printf("fila está lotada!");
-			cliente();
-		} else{
-			
-		}
-	}
+int main(){
+
+pthread_t threadClientes[N_CLIENTES];
+
+int i;
+
+int clientes[N_CLIENTES]; /*Identificador do cliente*/
+	for(i=0; i < N_CLIENTES;i++){
+	clientes[i] = i;
+	pthread_create(&threadClientes[i],NULL,caixaLivre,(void *) &clientes[i]);
 }
 
-void * atendendo(void * x){
-	while(1){
-		printf("Caixa atendeu um cliente. \n");
-		verde();
-	}
-	return x;
+for(i=0; i < N_CLIENTES;i++){
+	clientes[i] = i;
+	pthread_create(&threadClientes[i],NULL,caixaOcupado,(void *) &clientes[i]);
 }
-
-void * cliente(void * v){
-	int id = * (int *) x;
-	if(N_FILA ){
-		printf ("Cliente %d entrou na loja. \n");
-
-		printf("Cliente %d entrou na fila");
-
-		printf("Cliente %d deixou a loja.\n");
-	}
-	else{
-		printf("Loja está lotada, cliente %d não entrou na loja.\n");
-		return x;
-	}
-int main (){
-	for(i = 0; i < N_FILA; i++){
-
-	}
-
-	for(i = 0; i < N_FILA; i++){
-
-	}
+for(i=0;i < N_CLIENTES;i++){
+	pthread_join(threadClientes[i],NULL);
+}
 	return 0;
 }
